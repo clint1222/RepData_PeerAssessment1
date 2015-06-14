@@ -7,8 +7,25 @@ output:
 
 
 ## Loading and preprocessing the data
-```{r}
+
+```r
 library(dplyr)
+```
+
+```
+## 
+## Attaching package: 'dplyr'
+## 
+## The following object is masked from 'package:stats':
+## 
+##     filter
+## 
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+```
+
+```r
 library(lubridate)
 library(ggplot2)
 
@@ -20,12 +37,12 @@ activity <- read.csv("activity.csv", header=TRUE, stringsAsFactors=FALSE)
 activity$datetime <- parse_date_time(paste(activity$date, activity$interval %/% 100, 
                                            activity$interval %% 100), "Y-m-d H M")
 activity$time <- parse_date_time(paste(activity$interval %/% 100, activity$interval %% 100), "H M")
-
 ```
 
 ## What is mean total number of steps taken per day?
 
-```{r}
+
+```r
 # For this part of the assignment, you can ignore the missing values in the dataset.
 activityNA <- na.omit(activity)
 
@@ -39,17 +56,32 @@ ggplot(sumsteps, aes(x=totsteps)) +
   ggtitle("Total Number of Steps per Day\nOct 1, 2012 - Nov 30, 2012") + 
   xlab("Steps per Day") + 
   ylab("Frequency")
+```
 
+![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2-1.png) 
+
+```r
   # Calculate and report the mean and median of the total number of steps taken per day
 mean(sumsteps$totsteps)
-median(sumsteps$totsteps)
+```
 
+```
+## [1] 10766.19
+```
+
+```r
+median(sumsteps$totsteps)
+```
+
+```
+## [1] 10765
 ```
 
 
 
 ## What is the average daily activity pattern?
-```{r}
+
+```r
   # Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number 
   # of steps taken, averaged across all days (y-axis)
 
@@ -73,25 +105,40 @@ ggplot(avgsteps, aes(x=time, y=avgsteps)) +
            label=paste("Max. Steps occurs at", maxsteps), 
            size=4, 
            col="darkgreen")
+```
 
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png) 
 
+```r
   # Which 5-minute interval, on average across all the days in the dataset, 
   # contains the maximum number of steps?
 print(paste("5-minute interval with the maximum average number of steps starts at:", maxsteps))
+```
 
+```
+## [1] "5-minute interval with the maximum average number of steps starts at: 08:35:00 AM"
 ```
 
 ## Imputing missing values
-```{r}
+
+```r
   # Calculate and report the total number of missing values in the dataset (i.e. the total number of 
   # rows with NAs)
 print(paste("Number of rows with NAs", summary(activity$steps)[7]))
+```
+
+```
+## [1] "Number of rows with NAs 2304"
+```
+
+```r
   # Devise a strategy for filling in all of the missing values in the dataset. The strategy does not 
   # need to be sophisticated. For example, you could use the mean/median for that day, or the mean 
   # for that 5-minute interval, etc.
 ```
 To fill in the missing data points, assign the mean for that 5-minute interval
-```{r}
+
+```r
   # Create a new dataset that is equal to the original dataset but with the missing data filled in.
 activityFilledNA <- activity
 for(i in 1:nrow(activity)){
@@ -111,11 +158,27 @@ ggplot(sumstepsFilledNA, aes(x=totsteps)) +
   ggtitle("Total Number of Steps per Day\nOct 1, 2012 - Nov 30, 2012 (Filled-in NAs)") + 
   xlab("Steps per Day") + 
   ylab("Frequency")
+```
 
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png) 
+
+```r
   # Calculate and report the mean and median of the total number of steps taken per day
 mean(sumstepsFilledNA$totsteps)
+```
+
+```
+## [1] 10766.19
+```
+
+```r
 median(sumstepsFilledNA$totsteps)
+```
 
+```
+## [1] 10766.19
+```
 
-
+```r
 ## Are there differences in activity patterns between weekdays and weekends?
+```
