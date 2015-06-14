@@ -121,38 +121,22 @@ median(sumstepsFilledNA$totsteps)
 ## Are there differences in activity patterns between weekdays and weekends?
 
 ```{r}
-  # Calculate and report the total number of missing values in the dataset (i.e. the total number of 
-  # rows with NAs)
-print(paste("Number of rows with NAs", summary(activity$steps)[7]))
-  # Devise a strategy for filling in all of the missing values in the dataset. The strategy does not 
-  # need to be sophisticated. For example, you could use the mean/median for that day, or the mean 
-  # for that 5-minute interval, etc.
 
-  # Create a new dataset that is equal to the original dataset but with the missing data filled in.
-activityFilledNA <- activity
-summary(activityFilledNA)
-for(i in 1:nrow(activity)){
-  if(is.na(activityFilledNA[i,]$steps)){
-    activityFilledNA[i,]$steps <- subset(avgsteps, time ==activityFilledNA[i,5])$avgsteps
+  # Create a new factor variable in the dataset with two levels -- "weekday" and "weekend" 
+  # indicating whether a given date is a weekday or weekend day.
+activityFilledNA$weekday <- "weekday"
+for(i in 1:nrow(activityFilledNA)){
+  if (weekdays(activityFilledNA[i,4]) == "Sunday" | weekdays(activityFilledNA[i,4]) == "Saturday"){
+    activityFilledNA[i,]$weekday <- "weekend"
   }
 }
-summary(activityFilledNA)
 
-  # Make a histogram of the total number of steps taken each day and Calculate and report the mean 
-  # and median total number of steps taken per day. Do these values differ from the estimates from 
-  # the first part of the assignment? What is the impact of imputing missing data on the estimates 
-  # of the total daily number of steps?
-sumstepsFilledNA <- summarize(group_by(activityFilledNA, date), totsteps=sum(steps))
+activityFilledNA$weekday <- as.factor(activityFilledNA$weekday)
+
+  # Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute 
+  # interval (x-axis) and the average number of steps taken, averaged across all weekday 
+  # days or weekend days (y-axis).
 
 
-# If you do not understand the difference between a histogram and a barplot, research the difference between them. Make a histogram of the total number of steps taken each day
-ggplot(sumstepsFilledNA, aes(x=totsteps)) + 
-  geom_histogram(fill="orange", colour="black") + 
-  ggtitle("Total Number of Steps per Day\nOct 1, 2012 - Nov 30, 2012 (Filled-in NAs)") + 
-  xlab("Steps per Day") + 
-  ylab("Frequency")
-
-# Calculate and report the mean and median of the total number of steps taken per day
-mean(sumstepsFilledNA$totsteps)
-median(sumstepsFilledNA$totsteps)
 ```
+
